@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import * as types from './types.action';
 import realm from '../realm';
 import { triggerAction } from './locations.action';
@@ -38,9 +38,7 @@ export function setUnit(unit, index) {
 }
 
 export function setLatestCollectiveUpdate() {
-	const date = moment()
-		.unix()
-		.toString();
+	const date = DateTime.local().valueOf();
 	realm.write(() => {
 		realm.create(
 			'Options',
@@ -90,9 +88,7 @@ export function getSettings() {
 	const onboarding = settings ? settings.onboarding : false;
 	const latestUpdate = settings
 		? settings.latestUpdate
-		: moment()
-				.unix()
-				.toString();
+		: DateTime.local().valueOf();
 	if (!settings) {
 		realm.write(() => {
 			realm.create('Options', {

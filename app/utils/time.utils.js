@@ -1,24 +1,15 @@
-import moment from 'moment';
-import tz from 'moment-timezone';
+import { DateTime } from 'luxon';
 
 module.exports = {
 	isDaylight(currentTimezone) {
-		const eveningTime = moment()
-			.tz(currentTimezone)
-			.hour(18)
-			.minute(0)
-			.second(0);
+		const eveningTime = DateTime.local()
+			.set({ hour: 18, minute: 0, second: 0 })
+			.setZone(currentTimezone);
 
-		return moment()
-			.tz(currentTimezone)
-			.isBefore(eveningTime);
+		return DateTime.local().setZone(currentTimezone) < eveningTime;
 	},
 
 	setToTime(time, h, m, s) {
-		time
-			.clone()
-			.hour(h)
-			.minute(m)
-			.second(s);
+		time.set({ hour: h, minute: m, second: s });
 	},
 };

@@ -56,8 +56,6 @@ let renderFlatList = (day: bool, activeLocation: int, onDelete, onSelect) =>
       let stringId: string = string_of_int(id);
       <Location
         id
-        lat=item##lat
-        lng=item##lng
         onDelete
         onSelect
         index

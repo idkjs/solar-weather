@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import tz from 'moment-timezone';
+import { DateTime } from 'luxon';
 import PropTypes from 'prop-types';
 import Permissions from 'react-native-permissions';
 
@@ -55,10 +56,12 @@ class Dashboard extends PureComponent {
 
 	updateLocationsAndSetTimestamp() {
 		const { locations, settings } = this.props;
-		const now = moment();
-		const latestUpdate = moment.unix(settings.latestUpdate);
-
-		if (now.diff(latestUpdate, 'minutes') > 10 && !locations.loading) {
+		const latestUpdate = DateTime.fromMillis(settings.latestUpdate);
+		const now = DateTime.local();
+		if (
+			now.diff(latestUpdate, 'minutes').get('minutes') > 10 &&
+			!locations.loading
+		) {
 			this.props.dispatch(locationActions.updateAllLocations());
 		}
 	}
@@ -305,8 +308,8 @@ class Dashboard extends PureComponent {
 				locationSearch={locationSearch}
 				anyLocation={anyLocation}
 				openRight={openRight}
-				onRowSelect={(id, lat, lng) =>
-					this.props.dispatch(locationActions.setActiveLocation(id, lat, lng))
+				onRowSelect={idx =>
+					this.props.dispatch(locationActions.setActiveLocation(idx))
 				}
 				onRowDelete={id =>
 					this.props.dispatch(locationActions.deleteLocationFromStore(id))

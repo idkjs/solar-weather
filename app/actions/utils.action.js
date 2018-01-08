@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import moment from 'moment';
-import tz from 'moment-timezone';
+import { DateTime } from 'luxon';
 import realm from '../realm';
 
 const R = require('ramda');
@@ -30,14 +29,9 @@ export const forecastResponseExtended = (location, res, id) => {
 		process.env.NODE_ENV === 'test' ? new Date(1515149649 * 1000) : new Date();
 	const { data: { daily, alerts, currently, hourly, timezone } } = res;
 
-	const fiveDaysFromNow = moment()
-		.tz(timezone)
-		.hour(0)
-		.add(5, 'days');
-	const followingDay = moment()
-		.tz(timezone)
-		.hour(0)
-		.add(0, 'days');
+	const timeInZone = DateTime.local().setZone(timezone);
+	const followingDay = timeInZone.set({ hour: 0 });
+	const fiveDaysFromNow = followingDay.plus({ days: 5 });
 
 	return Object.assign(
 		{ id },
@@ -62,9 +56,8 @@ export const forecastResponseExtended = (location, res, id) => {
 				data: R.uniq(
 					daily.data
 						.filter(item => {
-							const isAfter = moment.unix(item.time).isAfter(followingDay);
-							const isBefore = moment.unix(item.time).isBefore(fiveDaysFromNow);
-							return isAfter && isBefore;
+							const time = DateTime.fromMillis(item.time * 1000);
+							return time > followingDay && time < fiveDaysFromNow;
 						})
 						.slice(0, 5),
 				),

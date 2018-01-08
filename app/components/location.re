@@ -52,8 +52,6 @@ let handleTap = (state) =>
 let make =
     (
       ~name,
-      ~lat,
-      ~lng,
       ~index,
       ~icon,
       ~onDelete,
@@ -76,7 +74,7 @@ let make =
       style=styles##container
       onRowPress=(
         () => {
-          onSelect(index, lat, lng);
+          onSelect(index);
           handleTap(state)
         }
       )

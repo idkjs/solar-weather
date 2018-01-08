@@ -10,9 +10,11 @@
 	},
 	"dependencies": {
 		"axios": "^0.17.0",
+		"bs-luxon": "^0.1.0",
 		"bs-moment": "^0.1.8",
 		"folktale": "^2.0.1",
 		"immutable": "^3.8.2",
+		"luxon": "^0.2.12",
 		"moment": "^2.19.1",
 		"moment-timezone": "^0.5.14",
 		"prop-types": "^15.6.0",
